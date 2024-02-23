@@ -47,7 +47,8 @@ export class UserController {
                 name,
                 username,
                 email,
-                password: hash_password
+                password: hash_password,
+                role: 'user'
             }
         })
         return response.status(201).send()
