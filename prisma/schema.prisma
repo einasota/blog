@@ -18,7 +18,7 @@ model User {
   name      String
   email     String   @unique
   pass      String
-  role      String
+  role      String   @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Post      Post[]

@@ -3,10 +3,17 @@ import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { authLib } from "../lib/auth"
 import { prisma } from "../lib/prisma"
+import z from "zod"
 
 export class AuthController {
     async register(request: Request, response: Response) {
-        const { name, email, pass, role } = request.body
+        const userData = z.object({
+            name: z.string(),
+            email: z.string().email(),
+            pass: z.string().min(8),
+            role: z.string().nullable()
+        })
+        const { name, email, pass, role } = userData.parse(request.body)
         try {
             if (await prisma.user.findUnique({ where: email })) {
                 return response.status(400).send({ error: "user already exists" })
@@ -26,9 +33,13 @@ export class AuthController {
         }
     }
     async login(request: Request, response: Response) {
-        const { email, pass } = request.body
+        const userData = z.object({
+            email: z.string().email(),
+            pass: z.string()
+        })
+        const { email, pass } = userData.parse(request.body)
         try {
-            const user = prisma.user.findUnique({ where: email })
+            const user = await prisma.user.findUnique({ where: email })
             if (!user) {
                 return response.status(400).send({ error: "user not found" })
             }
