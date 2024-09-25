@@ -46,6 +46,11 @@ export class AuthController {
             if (!await bcryptjs.compare(pass, user.pass)) {
                 return response.status(400).send({ error: "password invalid" })
             }
+            const token = jwt.sign({ id: user.id }, authLib.secret!, {
+                expiresIn: authLib.expiresIn
+            })
+
+            return response.status(200).send({ data: { name: user.name, email: user.email, token: token } })
         } catch (error) {
 
         }
