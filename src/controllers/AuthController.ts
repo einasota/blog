@@ -15,7 +15,7 @@ export class AuthController {
         })
         const { name, email, pass, role } = userData.parse(request.body)
         try {
-            if (await prisma.user.findUnique({ where: email })) {
+            if (await prisma.user.findUnique({ where: { email } })) {
                 return response.status(400).send({ error: "user already exists" })
             }
             const hashPass = await bcryptjs.hash(pass, 10)
@@ -39,7 +39,7 @@ export class AuthController {
         })
         const { email, pass } = userData.parse(request.body)
         try {
-            const user = await prisma.user.findUnique({ where: email })
+            const user = await prisma.user.findUnique({ where: { email } })
             if (!user) {
                 return response.status(400).send({ error: "user not found" })
             }
