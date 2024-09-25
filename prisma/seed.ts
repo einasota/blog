@@ -1,4 +1,5 @@
-import { prisma } from "./prisma";
+import { prisma } from "../src/lib/prisma";
+import bcryptjs from "bcryptjs"
 
 async function createAdmin() {
     const admin = await prisma.user.upsert({
@@ -9,7 +10,7 @@ async function createAdmin() {
         create: {
             name: "Jhonata Souza",
             email: "einasota@gmail.com",
-            pass: "",
+            pass: await bcryptjs.hash(process.env.PASSADMIN!, 10),
             role: "admin"
         }
     })

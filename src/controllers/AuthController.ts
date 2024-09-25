@@ -37,6 +37,7 @@ export class AuthController {
             email: z.string().email(),
             pass: z.string()
         })
+        console.log(request.body)
         const { email, pass } = userData.parse(request.body)
         try {
             const user = await prisma.user.findUnique({ where: { email } })
@@ -50,9 +51,9 @@ export class AuthController {
                 expiresIn: authLib.expiresIn
             })
 
-            return response.status(200).send({ data: { name: user.name, email: user.email, token: token } })
+            return response.status(200).send({ data: { id: user.id, name: user.name, email: user.email, token: token } })
         } catch (error) {
-
+            return response.status(400).send({ error: error })
         }
     }
 }
