@@ -11,7 +11,17 @@ export class PostController {
         })
         const { title, shortDescription, content } = postData.parse(request.body)
         try {
-
+            if (!title && !content) {
+                return response.status(400).send({ error: "insert text in title and content" })
+            }
+            await prisma.post.create({
+                data: {
+                    title,
+                    shortDescription,
+                    content
+                    //Falta adicionar o autor, realizar busca salvo após o login!
+                }
+            })
         } catch (error) {
 
         }
